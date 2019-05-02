@@ -1,0 +1,70 @@
+service: serverless-crawler
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  versionFunctions: false
+  stage: dev
+  apiName: "Crawler"
+  region: us-east-1
+  api keys:
+    None
+  environment:
+    DYNAMODB_TABLE: Tweets
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: 
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+        - "arn:aws:logs:*:*:*"
+layers:
+  ChromiumSelenium:
+    path: bin
+    layerName: chromium-selenium-layer
+    description: Headless Chromium and Selenium WebDriver
+    compatibleRuntimes: 
+      - nodejs8.10
+      - python3.7
+      - python2.7
+      - go1.x
+      - java8
+    licenseInfo: MIT
+    allowedAccounts: 
+      - '*'
+    retain: false 
+
+functions:
+  getTweets:
+    handler: handler/tweets.getTweets
+    layers: ChromiumSelenium
+    memorySize: 1156
+    timeout: 20
+    events:
+      - http:
+          path: tweets
+          method: get
+          cors: true
+resources:
+  Resources:
+    TweetsDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
