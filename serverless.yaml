@@ -28,7 +28,7 @@ provider:
 layers:
   ChromiumSelenium:
     path: bin
-    layerName: chromium-selenium-layer
+    layerName: SeleniumLayer
     description: Headless Chromium and Selenium WebDriver
     compatibleRuntimes: 
       - nodejs8.10
@@ -44,7 +44,8 @@ layers:
 functions:
   getTweets:
     handler: handler/tweets.getTweets
-    layers: ChromiumSelenium
+    layers: 
+      -  {Ref: ChromiumSeleniumLambdaLayer}
     memorySize: 1156
     timeout: 20
     events:
