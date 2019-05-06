@@ -118,6 +118,52 @@ function crawEscavador(link){
   }]);  
 }
 
+function crawEscavadorDetail(link){
+
+  crawAndBuild(link,
+  [{
+    name: 'data',
+    type: 3,
+    selector: '.states',
+    children: [{
+      name: 'processCount',
+      type: 3,
+      selector: '#usuario>div.container.-rel>div>header>div>div.body>div>div>div.state.-processos>span.heading.-like3.stateContent'
+    },
+	{
+	  name: 'name',
+	  type: 3,
+	  selector: '#usuario>div.container.-rel>div>header>div>div.body>div>div>div:nth-child(2)>a'
+	},
+    {
+      name: 'location',
+      type: 3,
+      selector: '#usuario>div.container.-rel>div>header>div>div.body>div>div>div:nth-child(3)>span.heading.-like3.stateContent'
+    }]
+  },
+  {
+	  name: 'process',
+	  type: 3,
+	  selector: '#processos>table>tbody>tr',
+	  children:[
+	  {
+		  name: 'type',
+		  type: 3,
+		  selector: '#processos>table>tbody>tr>td.bodyCol.type'
+	  },
+	  {
+		  name: 'number',
+		  type: 3,
+		  selector: '#processos>table>tbody>tr>td.bodyCol.number'
+	  },
+	  {
+		  name: 'people',
+		  type: 3,
+		  selector: '#processos>table>tbody>tr>td.bodyCol.envolvido'
+	  }]
+	}]);  
+}
+
 function crawJusbr(link){
 
   crawAndBuild(link,
@@ -159,4 +205,4 @@ async function crawFacebook(link){
 };
 
 
-crawFacebook('LINK PROFILE /about');
+crawEscavadorDetail('https://www.escavador.com/sobre/11935622/iram-laterza');
