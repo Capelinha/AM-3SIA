@@ -98,6 +98,16 @@ async function crawFacebook(link){
         selector: 'table > tbody > tr > td:nth-child(2)'
       }]
     },
+	  {
+      name: 'relationship',
+      type: 3,
+      selector: '#relationship > div > div:nth-child(2) > div',
+      children: [{
+        name: 'status',
+        type: 3,
+        selector: 'div > div'
+      }]
+    },
     {
       name: 'family',
       type: 3,
